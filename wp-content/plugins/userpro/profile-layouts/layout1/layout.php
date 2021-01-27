@@ -33,38 +33,79 @@
 				<?php echo userpro_profile_data('description', $user_id); ?>
 			</div>
 			<div class="contacts">
-				<a href="https://wa.me/<?php echo userpro_profile_data('whatsapp', $user_id); ?>" class="std-button">WhatsApp</a>
+				<?php if(userpro_profile_data('whatsapp', $user_id)) :?>
+					<a href="https://wa.me/<?php echo userpro_profile_data('whatsapp', $user_id); ?>" class="std-button">
+						<?php
+							if (userpro_profile_data('whatsapp_buttonname', $user_id)){
+								echo userpro_profile_data('whatsapp_buttonname', $user_id);
+								}
+							else{
+								echo "Whatsapp";
+							}
+							?>
+					</a>
+				<?php endif; ?>
+				<?php if(userpro_profile_data('viber', $user_id)) :?>
+					<?php if(check_mobile_device()) :?>
+						<a href="viber://add?number=<?php echo userpro_profile_data('viber', $user_id); ?>" class="std-button">
+							<?php
+								if (userpro_profile_data('viber_buttonname', $user_id)){
+									echo userpro_profile_data('viber_buttonname', $user_id);
+									}
+								else{
+									echo "Viber";
+								}
+							?>
+						</a>
+					<?php else : ?>
+						<a href="viber://chat?number=+<?php echo userpro_profile_data('viber', $user_id); ?>" class="std-button">
+							<?php
+								if (userpro_profile_data('viber_buttonname', $user_id)){
+									echo userpro_profile_data('viber_buttonname', $user_id);
+									}
+								else{
+									echo "Viber";
+								}
+							?>
+						</a>
+					<?php endif; ?>
+				<?php endif; ?>
 
-<?php if(check_mobile_device()) :?>
-	<a href="viber://add?number=<?php echo userpro_profile_data('viber', $user_id); ?>" class="std-button">Viber</a>
-<?php else : ?>
-	<a href="viber://chat?number=+<?php echo userpro_profile_data('viber', $user_id); ?>" class="std-button">Viber</a>
-<?php endif; ?>
+				<?php if(userpro_profile_data('user_url', $user_id)) :?>
+					<a href="<?php echo userpro_profile_data('user_url', $user_id); ?>" class="std-button">
+						<?php
+							if (userpro_profile_data('vk_buttonname', $user_id)){
+								echo userpro_profile_data('vk_buttonname', $user_id);
+								}
+							else{
+								echo "VK";
+							}
+						?>
+					</a>
+				<?php endif; ?>
 
-
-				<a href="<?php echo userpro_profile_data('user_url', $user_id); ?>" class="std-button">VK</a>
-				<a href="t.me/@<?php echo userpro_profile_data('telegram', $user_id); ?>" class="std-button">Telegram</a>
+				<?php if(userpro_profile_data('telegram', $user_id)) :?>
+					<a href="t.me/@<?php echo userpro_profile_data('telegram', $user_id); ?>" class="std-button">
+						<?php
+							if (userpro_profile_data('telegram_buttonname', $user_id)){
+								echo userpro_profile_data('telegram_buttonname', $user_id);
+								}
+							else{
+								echo "Telegram";
+							}
+						?>
+					</a>
+				<?php endif; ?>
 			</div>
-			<div class="feedback">
-				<form id="feedbackform">
-					<h2 class="feedback__header">Написать мне на почту</h2>
-					<div>
-						<input type="email" class="feedback__email" placeholder="Email:"/>
-					</div>
-					<div>
-						<textarea class="feedback__message" rows="10" placeholder="Введите сообщение:"></textarea>
-					</div>
-					<div>
-						<button type="submit" class="std-button feedback__button">Отправить</button>
-					</div>
-				</form>
-			</div>
+			<?php if(userpro_profile_data('email_clients', $user_id)) :?>
+				<div class="feedback">
+					<a href="mailto:<?php echo userpro_profile_data('email_clients', $user_id); ?>" class="std-button">Написать мне на почту</a>
+				</div>
+			<?php endif; ?>
 		</div>
-
 	</div>
 	<div class="powered">
 		Сделано на Linli
-
 	</div>
 	<div>
 		<div>
