@@ -4,7 +4,7 @@
 	function userpro_fields_group_by_template( $template, $group='default' ) {
 		$array = get_option("userpro_fields_groups");
 		if (isset($array[$template][$group])){
-                    
+
 			if (count($array[$template][$group]) > 0){
                             return (array)$array[$template][$group];
                         }
@@ -12,25 +12,25 @@
                             return array();
                         }
                 }  else {
-                    
+
                     return array();
                 }
-			
+
 	}
-	
+
 	/* Get specific fields only */
 	function userpro_get_fields( $fields=array() ) {
 		$array = get_option("userpro_fields_builtin");
 		return array_intersect_key($array, array_flip($fields));
 	}
-	
+
 	/* Get all field keys */
 	function userpro_retrieve_metakeys() {
 		$fields = get_option('userpro_fields');
 		$array = array_keys($fields);
 		return $array;
 	}
-	
+
 	/* Retrieves a field */
 	function userpro_add_field($field, $hideable=0, $hidden=0, $required=0, $ajaxcheck=null) {
 		$fields = get_option('userpro_fields');
@@ -41,7 +41,7 @@
 		$array['ajaxcheck'] = $ajaxcheck;
 		return $array;
 	}
-	
+
 	/* Assign a section */
 	function userpro_add_section($name, $collapsible=0, $collapsed=0) {
 		$array = array(
@@ -51,7 +51,7 @@
 		);
 		return $array;
 	}
-	
+
 	/* Get file type icon */
 	function userpro_file_type_icon( $file ) {
 		$ext = pathinfo($file, PATHINFO_EXTENSION);
@@ -71,12 +71,12 @@
 		}
 		return 'class="'.$type.'"';
 	}
-	
+
 	/* If field has special roles */
 	function userpro_field_by_role($key, $user_id){
 		$test = userpro_get_option($key.'_roles');
 		if ($user_id > 0 && is_array($test) && !current_user_can('manage_options') ){
-			
+
 			$user = get_userdata( $user_id );
 			$user_role = array_shift($user->roles);
 			if (!in_array($user_role, $test)){
@@ -85,17 +85,17 @@
 		}
 		return true;
 	}
-	
+
 	/* Edit a field */
 	function userpro_edit_field( $key, $array, $i, $args, $user_id=null ) {
-		
+
 		global $userpro;
-		
+
 		$template = $args['template'];
 		$res = null;
-		
+
 		/* Added by Samir Patil for Conditional fields */
-		
+
 		$array['condition_fields'] = isset($array['condition_fields']) ? $array['condition_fields'] : "";
 		$array['condition_rule'] = isset($array['condition_rule']) ? $array['condition_rule'] : "";
 		$array['condition_value'] = isset($array['condition_value']) ? $array['condition_value'] : "";
@@ -104,61 +104,61 @@
 		/**
 		include & exclude
 		done by custom shortcode
-		params 
-		start here 
+		params
+		start here
 		**/
-		
+
 		if (isset($args['exclude_fields']) && $args['exclude_fields'] != '' ){
 			if (in_array( $key, explode(',',$args['exclude_fields']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['exclude_fields_by_name']) && $args['exclude_fields_by_name'] != '' ){
 			if (in_array( $array['label'], explode(',',$args['exclude_fields_by_name']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['exclude_fields_by_type']) && $args['exclude_fields_by_type'] != '' ){
 			if (isset($array['type']) && in_array( $array['type'], explode(',',$args['exclude_fields_by_type']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['include_fields']) && $args['include_fields'] != '' ){
 			if (!in_array( $key, explode(',',$args['include_fields']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['include_fields_by_name']) && $args['include_fields_by_name'] != '' ){
 			if (!in_array( $array['label'], explode(',',$args['include_fields_by_name']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['include_fields_by_type']) && $args['include_fields_by_type'] != '' ){
 			if (isset($array['type']) && !in_array( $array['type'], explode(',',$args['include_fields_by_type']) ) || !isset($array['type']) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		/**
 		end here
-		thanks please do not edit 
+		thanks please do not edit
 		here unless you know what you do
 		**/
-		
+
 		/* get field data */
 		$data = null;
-		
+
 		/* default ajax callbacks/checks */
 		if ($key == 'user_login' && $args['template'] == 'register') {
 			if (!isset($array['ajaxcheck']) || $array['ajaxcheck'] == ''){
@@ -189,7 +189,7 @@
 				$data .= " data-$data_option='$data_value'";
 			}
 		}
-		
+
 		/* disable editing */
 		if (userpro_user_cannot_edit($array) && !current_user_can('manage_options')){
 			$data .= ' disabled="disabled"';
@@ -208,7 +208,7 @@
 					} else {
 						$value = '';
 					}
-					
+
 					if (isset($array['width'])){
 						$width = $array['width'];
 						$height = $array['height'];
@@ -216,7 +216,7 @@
 						$width = '';
 						$height = '';
 					}
-					
+
 					$value .= '<img src="'.$crop.'" width="'.$width.'" height="'.$height.'" alt="" class="modified" />';
 				}
 			}
@@ -228,72 +228,72 @@
 				}
 			}
 		} else {
-			
+
 			// perhaps in registration
 			if (isset($array['type']) && $array['type'] == 'picture'){
 				if ($key == 'profilepicture') {
 					$array['default'] = get_avatar(0, 64);
 				}
 			}
-			
+
 			if (isset($array['hidden'])){
 			$is_hidden = $array['hidden'];
 			}
-			
+
 			if (isset($array['default'])){
 			$value = $array['default'];
 			}
-			
+
 		}
-		
+
 		if (!isset($value)) $value = null;
-		
+
 		if (!isset($array['placeholder'])) $array['placeholder'] = null;
-		
+
 		/* remove passwords */
 		if (isset($array['type']) && $array['type'] == 'password') $value = null;
-		
+
 		/* display a section */
-		
+
 		if ($args['allow_sections'] && isset( $array['heading']) ) {
-			
+
 		$collapsible = isset($array['collapsible'])?$array['collapsible']:0;
 			$collapsed = isset($array['collapsed'])?$array['collapsed']:0;
 			$res .= "<div class='userpro-section userpro-column userpro-collapsible-".$collapsible." userpro-collapsed-".$collapsed."'>".$array['heading']."</div>";
 		}
-		
+
 		/* display a field */
 		if (!$user_id) $user_id = 0;
 		if (isset( $array['type'] ) && userpro_field_by_role( $key, $user_id ) && userpro_private_field_class($array)=='' && ($array['locked'] == 0 ||($array['locked'] == 1 && current_user_can('administrator')) )) {
 		$res .= "<div class='userpro-field ".$condition_class." userpro-field-".$key." ".userpro_private_field_class($array)."' data-key='$key'>";
-		
+
 		if ( $array['label'] && $array['type'] != 'passwordstrength' ) {
-		
+
 		if ($args['field_icons'] == 1) {
-		$res .= "<div class='userpro-label iconed'>";
+		$res .= "<div class='linli-label-container iconed'>";
 		} else {
-		$res .= "<div class='userpro-label'>";
+		$res .= "<div class='linli-label-container'>";
 		}
 		$res .= "<label for='$key-$i'>".$array['label']."</label>";
-		if(isset ($array['required']) && $array['required']==1 ) 
+		if(isset ($array['required']) && $array['required']==1 )
 		$res.="<div class='required'>*</div>";
-					
-					if ($args['field_icons'] == 1 && $userpro->field_icon($key)) {
-						$res .= '<span class="userpro-field-icon"><i class="userpro-icon-'. $userpro->field_icon($key) .'"></i></span>';
-					}
-					
+
+				//	if ($args['field_icons'] == 1 && $userpro->field_icon($key)) {
+				//		$res .= '<span class="userpro-field-icon"><i class="userpro-icon-'. $userpro->field_icon($key) .'"></i></span>';
+				//	}
+
 					if ($args['template'] != 'login' && isset( $array['help'] ) && $array['help'] != '' ) {
-						$res .= '<span class="userpro-tip" title="'.stripslashes( $array['help'] ).'"></span>';
+						$res .= '<span class="linli-field-about">'.stripslashes( $array['help'] ).'</span>';
 					}
-					
+
 		$res .= "</div>";
 		}
-		
-		$res .= "<div class='userpro-input'>";
-		
+
+		$res .= "<div class='linli-input-container'>";
+
 			/* switch field type */
 			switch($array['type']) {
-			
+
 				case 'picture':
 					if (!isset($array['button_text']) || $array['button_text'] == '' ) $array['button_text'] = __('Upload photo','userpro');
 					$res .= "<div class='userpro-pic userpro-pic-".$key."' data-remove_text='".__('Remove','userpro')."'>".$value."</div>";
@@ -305,9 +305,9 @@
 					$res .= "<input type='button' value='".__('Remove','userpro')."' class='userpro-button red' />";
 					}
 					$res .= "<input data-required='".$array['required']."' type='hidden' name='$key-$i' id='$key-$i' value='".userpro_profile_data( $key, $user_id )."' />";
-					
+
 					break;
-					
+
 				case 'file':
 
 					if (!isset($array['button_text']) || $array['button_text'] == '' ) $array['button_text'] = __('Upload file','userpro');
@@ -317,12 +317,12 @@
 					$res .= "<input type='button' value='".__('Remove','userpro')."' class='userpro-button red' />";
 					}
 					$res .= "<input data-required='".$array['required']."' type='hidden' name='$key-$i' id='$key-$i' value='".userpro_profile_data( $key, $user_id )."' />";
-                                    
+
                                         break;
-					
+
 				case 'datepicker':
 					$res .= "<input data-fieldtype='datepicker' class='userpro-datepicker' type='text' name='$key-$i' id='$key-$i' value='".$value."' placeholder='".$array['placeholder']."' $data />";
-					
+
 					/* allow user to make it hideable */
 					if ( isset($array['hideable']) && $array['hideable'] == 1) {
 						$hideable = $array['hideable'];
@@ -332,14 +332,14 @@
 						$res .= checked( $hideable, $is_hidden, 0 );
 						$res .= " />".__('Make this field hidden from public','userpro')."</label>";
 					}
-					
+
 					break;
-					
+
 				case 'text':
-				
+
 					$res .= "<input type='text' name='$key-$i' id='$key-$i' value=".'"'.$value.'"'." placeholder='".$array['placeholder']."' $data />";
-																						
-										
+
+
 
 					/* allow user to make it hideable */
 					if ( isset($array['hideable']) && $array['hideable'] == 1) {
@@ -350,19 +350,19 @@
 						$res .= checked( $hideable, $is_hidden, 0 );
 						$res .= " />".__('Make this field hidden from public','userpro')."</label>";
 					}
-					
+
 					break;
-					
+
 				case 'antispam':
-					
+
 					$rand1 = rand(1, 10);
 					$rand2 = rand(1, 10);
 					$res .= sprintf(__('Answer: %s + %s','userpro'), $rand1, $rand2);
 					$res .= "<input type='text' name='$key-$i' id='$key-$i' value='' $data />";
 					$res .= "<input type='hidden' name='answer-$i' id='answer-$i' value='".($rand1 + $rand2)."' />";
-					
+
 					break;
-					
+
 				case 'textarea':
 					if (isset($array['size'])) {
 						$size = $array['size'];
@@ -370,7 +370,7 @@
 						$size = 'normal';
 					}
 					$res .= "<textarea class='$size' type='text' name='$key-$i'"." placeholder='".$array['placeholder']."' id='$key-$i' $data >$value</textarea>";
-					
+
 					/* allow user to make it hideable */
 					if ($array['hideable'] == 1) {
 						$hideable = $array['hideable'];
@@ -380,17 +380,17 @@
 						$res .= checked( $hideable, $is_hidden, 0 );
 						$res .= " />".__('Make this field hidden from public','userpro')."</label>";
 					}
-					
+
 					break;
-					
+
 				case 'password':
 					$res .= "<input type='password' name='$key-$i' id='$key-$i' value='".$value."' placeholder='".$array['placeholder']."' autocomplete='off' $data />";
 					break;
-					
+
 				case 'passwordstrength' :
 					$res .= '<span class="strength-text" '.$data.'>'.__('Password Strength','userpro').'</span><div class="userpro-clear"></div><span class="strength-container"><span class="strength-plain"></span><span class="strength-plain"></span><span class="strength-plain"></span><span class="strength-plain"></span><span class="strength-plain"></span></span><div class="userpro-clear"></div>';
 					break;
-					
+
 				case 'select':
 					if (isset($array['options'])){
 						$countrylist=get_option('userpro_fields');
@@ -398,14 +398,14 @@
 						$country=$countrylist['billing_country']['options'];
 						if($key=='shipping_country')
 						{
-							
+
 							foreach($country as $country_code => $country_name)
 							{
-							
+
 								if($country_code==$value || $country_name==$value)
 								{
 									$value = $country_name;
-					
+
 									if (!isset( $value )) $value = 0;
 									if (isset($array['default']) && !$value) $value = $array['default'];
 									$res .= "<select name='$key-$i' id='$key-$i' class='chosen-select' data-placeholder='".$array['placeholder']."' $data >";
@@ -420,19 +420,19 @@
 									}
 									$res .= "</select>";
 								}
-							
+
 							}
-							
-							
+
+
 						}
-						
+
 					elseif($key=='billing_country')
 					{
-					 	
-					 	
+
+
 					 	foreach($country as $country_code => $country_name)
 					 	{
-					 		
+
 					 		if($country_code==$value  || $country_name==$value)
 					 		{
 					 			$value = $country_name;
@@ -450,11 +450,11 @@
 					 			}
 					 			$res .= "</select>";
 					 		}
-					 		
+
 					 	}
 					}
 					elseif ($key == 'role') {
-					
+
 						$options = userpro_get_roles( userpro_get_option('allowed_roles') );
 						if (!isset( $value )) $value = 0;
 						$res .= "<select data-required='".$array['required']."'name='$key-$i' id='$key-$i' class='chosen-select' data-placeholder='".$array['placeholder']."' $data >";
@@ -468,14 +468,14 @@
 							}
 						}
 						$res .= "</select>";
-						
+
 					}
 
  else {
-					
-						
-					 
-					 	
+
+
+
+
 						if (!isset( $value )) $value = 0;
 						if (isset($array['default']) && !$value) $value = $array['default'];
 						$res .= "<select name='$key-$i' id='$key-$i' class='chosen-select' data-placeholder='".$array['placeholder']."' $data >";
@@ -491,7 +491,7 @@
 						$res .= "</select>";
 						$res = apply_filters( 'userpro_change_select', $res, $array, $key, $i, $data, $value);
 					}
-					
+
 					/* allow user to make it hideable */
 					if ($array['hideable'] == 1) {
 						$hideable = $array['hideable'];
@@ -501,35 +501,35 @@
 						$res .= checked( $hideable, $is_hidden, 0 );
 						$res .= " />".__('Make this field hidden from public','userpro')."</label>";
 					}
-					
+
 					}
 					break;
-					
+
 				case 'multiselect':
 
-					
+
 
 					if($key=='tags')
 					{
 						$tags = get_terms( 'userpro_tags', array( 'hide_empty' => 0 ) );
-									
-											
+
+
 						$res .= "<select name='".$key.'-'.$i.'[]'."' multiple='multiple' class='chosen-select' data-placeholder='".$array['placeholder']."'>";
 					foreach($tags  as $val ){
                                                     if(isset($val->name)) {
                                                         $v = $val->name;
-                                                    }    
+                                                    }
 							$res .= '<option value="'.$v.'" ';
 							if ( ( is_array( $value ) && in_array($v, $value ) ) || $v == $value ) { $res .= 'selected="selected"'; }
 							$res .= '>'.$v.'</option>';
-						
+
 					}
 					$res .= "</select>";
 					}
-					
+
 					else
-					{	
-					
+					{
+
 					if (isset($array['options'])){
 					$res .= "<select name='".$key.'-'.$i.'[]'."' multiple='multiple' class='chosen-select' data-placeholder='".$array['placeholder']."'>";
 					foreach($array['options'] as $k=>$v) {
@@ -562,7 +562,7 @@
 					$res .= "</div>";
 					}
 					break;
-					
+
 				case 'checkbox-full':
 					if (isset($array['options'])){
 					$res .= "<div class='userpro-checkbox-wrap'  data-required='".$array['required']."'>";
@@ -577,7 +577,7 @@
 					$res .= "</div>";
 					}
 					break;
-					
+
 				case 'mailchimp':
 					if (!isset($array['list_text'])){
 						$array['list_text'] = __('Subscribe to our newsletter','userpro');
@@ -590,48 +590,48 @@
 							$checkbox_check = "checked=checked";
 						}else{
 							$checked_class = "";
-							$checkbox_check = "";		
+							$checkbox_check = "";
 						}
 					}
 					if ( $userpro->mailchimp_is_subscriber($user_id, $array['list_id']) ) {
-					
+
 					$res .= "<div class='userpro-checkbox-wrap'>";
 					$res .= "<div class='userpro-help'><i class='userpro-icon-ok'></i>".__('You are currently subscribed to this newsletter.','userpro')."</div>";
 					$res .= "<label class='userpro-checkbox full'><span";
 					$res .= '></span><input type="checkbox" value="subscribed" name="'.$key.'-'.$i.'" ';
 					$res .= " />".__('Unsubscribe from this newsletter','userpro')."</label>";
 					$res .= "</div>";
-					
+
 					} else {
 					$res .= "<div class='userpro-checkbox-wrap'>";
-					$res .= "<label class='userpro-checkbox full'><span $checked_class"; 
+					$res .= "<label class='userpro-checkbox full'><span $checked_class";
 					$res .= '></span><input type="checkbox" value="unsubscribed" name="'.$key.'-'.$i.'" ';
 					$res .= " $checkbox_check />".$array['list_text']."</label>";
 					$res .= "</div>";
-					
+
 					}
 					break;
 				case 'followers':
-					
+
 				if ( $userpro->followere_email_subscriber($user_id) ) {
-					
+
 					$res .= "<div class='userpro-checkbox-wrap'>";
 					$res .= "<div class='userpro-help'><i class='userpro-icon-ok'></i>".__('You are currently receiving following email alerts.','userpro')."</div>";
 					$res .= "<label class='userpro-checkbox full'><span";
 					$res .= '></span><input type="checkbox" value="subscribed" name="'.$key.'-'.$i.'" ';
 					$res .= " />".__('Remove the following email alert ','userpro')."</label>";
 					$res .= "</div>";
-					
+
 					} else {
-					
+
 					$res .= "<div class='userpro-checkbox-wrap'>";
 					$res .= "<label class='userpro-checkbox full'><span";
 					$res .= '></span><input type="checkbox" value="unsubscribed" name="'.$key.'-'.$i.'" ';
 					$res .= " />".$array['follower_text']."</label>";
 					$res .= "</div>";
-					
+
 					}
-					break;				
+					break;
 				case 'radio':
 					if (isset($array['options'])){
 					$res .= "<div class='userpro-radio-wrap' data-required='".$array['required']."'>";
@@ -654,7 +654,7 @@
 						$res .= " />".__('Make this field hidden from public','userpro')."</label>";
 					}
 					break;
-					
+
 				case 'radio-full':
 					if (isset($array['options'])){
 					$res .= "<div class='userpro-radio-wrap' data-required='".$array['required']."'>";
@@ -666,7 +666,7 @@
 						$res .= checked( $v, $value, 0 );
 						$res .= " />$v</label>";
 					}
-					
+
 					$res .= "</div>";
 					}
 					if ( isset($array['hideable']) && $array['hideable'] == 1) {
@@ -679,11 +679,11 @@
 					}
 					break;
 
-					
+
 				case 'recaptcha':
 						$res .=  '<script src="https://www.google.com/recaptcha/api.js" async defer></script>';
 						$res .= '<input type="hidden" value="sitekey" name = ""/>
-							<div class="g-recaptcha" 
+							<div class="g-recaptcha"
 									style="transform:scale(0.77);transform-origin:0;-webkit-transform:scale(0.77);transform:scale(0.77);-webkit-transform-origin:0 0;transform-origin:0 0; 0"
 									data-sitekey='.$array['sitekey'].'>
 								</div>';
@@ -709,83 +709,83 @@
 				/**
 				 * Security Question Answer End
 				 */
-			
+
 			} /* end switch field type */
-			
+
 		/* add action for each field */
 		$hook = apply_filters("userpro_field_filter", $key, $user_id);
 		$res .= $hook;
-		
+
 		$res .= "<div class='userpro-clear'></div>";
 		$res .= "</div>";
 		$res .= "</div><div class='userpro-clear'></div>";
 		}
-		
+
 		return $res;
 	}
-	
+
 	/* Show a field */
 	function userpro_show_field( $key, $array, $i, $args, $layout=0, $user_id=null ) {
 		global $userpro;
-		
+
 		$template = $args['template'];
 		$res = null;
-		
+
 		/**
 		include & exclude
 		done by custom shortcode
-		params 
-		start here 
+		params
+		start here
 		**/
-		
+
 		if (isset($args['exclude_fields']) && $args['exclude_fields'] != '' ){
 			if (in_array( $key, explode(',',$args['exclude_fields']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['exclude_fields_by_name']) && $args['exclude_fields_by_name'] != '' ){
 			if (in_array( $array['label'], explode(',',$args['exclude_fields_by_name']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['exclude_fields_by_type']) && $args['exclude_fields_by_type'] != '' ){
 			if (isset($array['type']) && in_array( $array['type'], explode(',',$args['exclude_fields_by_type']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['include_fields']) && $args['include_fields'] != '' ){
 			if (!in_array( $key, explode(',',$args['include_fields']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['include_fields_by_name']) && $args['include_fields_by_name'] != '' ){
 			if (!in_array( $array['label'], explode(',',$args['include_fields_by_name']) ) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		if (isset($args['include_fields_by_type']) && $args['include_fields_by_type'] != '' ){
 			if (isset($array['type']) && !in_array( $array['type'], explode(',',$args['include_fields_by_type']) ) || !isset($array['type']) ) {
 				$res = '';
 				return false;
 			}
 		}
-		
+
 		/**
 		end here
-		thanks please do not edit 
+		thanks please do not edit
 		here unless you know what you do
 		**/
-		
+
 		ob_start();
 		if( $layout == 0 ){
 			include userpro_path.'profile-layouts/default/field-layout.php';

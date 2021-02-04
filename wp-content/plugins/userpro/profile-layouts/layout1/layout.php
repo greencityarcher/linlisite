@@ -85,7 +85,7 @@
 				<?php endif; ?>
 
 				<?php if(userpro_profile_data('telegram', $user_id)) :?>
-					<a href="t.me/@<?php echo userpro_profile_data('telegram', $user_id); ?>" class="std-button">
+					<a href="https://t.me/@<?php echo userpro_profile_data('telegram', $user_id); ?>" class="std-button">
 						<?php
 							if (userpro_profile_data('telegram_buttonname', $user_id)){
 								echo userpro_profile_data('telegram_buttonname', $user_id);
@@ -99,7 +99,16 @@
 			</div>
 			<?php if(userpro_profile_data('email_clients', $user_id)) :?>
 				<div class="feedback">
-					<a href="mailto:<?php echo userpro_profile_data('email_clients', $user_id); ?>" class="std-button">Написать мне на почту</a>
+					<a href="mailto:<?php echo userpro_profile_data('email_clients', $user_id); ?>" class="std-button">
+						<?php
+							if (userpro_profile_data('email_buttonname', $user_id)){
+								echo userpro_profile_data('telegram_buttonname', $user_id);
+								}
+							else{
+								echo "Написать на почту";
+							}
+						?>
+					</a>
 				</div>
 			<?php endif; ?>
 		</div>

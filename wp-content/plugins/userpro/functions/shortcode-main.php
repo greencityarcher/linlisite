@@ -40,7 +40,7 @@
 				'permalink'					=> $permalink,
 				'field_icons'					=> userpro_get_option('field_icons'),
 				'profile_thumb_size'				=> 150,
-				'linli_profile_thumb_size'				=> 200,					
+				'linli_profile_thumb_size'				=> 200,
 				'register_heading' 				=> __('Register an Account','userpro'),
 				'register_side'					=> __('Already a member?','userpro'),
 				'register_side_action'				=> 'login',
